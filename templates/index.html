@@ -6,144 +6,100 @@
     <title>Ji Web Assistant</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { display: flex; height: 100vh; background-color: #f4f6f9; }
-        
-        /* Sidebar */
-        .sidebar { width: 260px; background: #1e293b; color: #fff; display: flex; flex-direction: column; padding: 15px; }
-        .sidebar h2 { font-size: 18px; margin-bottom: 15px; color: #38bdf8; }
-        .new-chat-btn { background: #0284c7; color: white; border: none; padding: 10px; border-radius: 6px; cursor: pointer; margin-bottom: 15px; font-weight: bold; }
-        .history-list { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
-        .history-item { background: #334155; padding: 10px; border-radius: 6px; font-size: 13px; cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .history-item:hover { background: #475569; }
-
-        /* Main Chat Container */
-        .main-chat { flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
-        .chat-header { background: #fff; padding: 15px 20px; border-bottom: 1px solid #e2e8f0; font-weight: bold; font-size: 18px; color: #0f172a; }
+        body { display: flex; height: 100vh; background-color: #f0f2f5; }
+        .sidebar { width: 260px; background-color: #1e1e2d; color: white; padding: 20px; display: flex; flex-direction: column; }
+        .sidebar h2 { font-size: 18px; margin-bottom: 20px; color: #4e73df; }
+        .new-chat-btn { background: #4e73df; color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        .main-content { flex: 1; display: flex; flex-direction: column; }
+        .chat-header { background: white; padding: 15px 20px; border-bottom: 1px solid #ddd; font-weight: bold; }
         .chat-box { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
-        
-        .message { max-width: 75%; padding: 12px 16px; border-radius: 10px; line-height: 1.5; font-size: 15px; }
-        .user-message { background: #0284c7; color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
-        .bot-message { background: #ffffff; color: #1e293b; border: 1px solid #e2e8f0; align-self: flex-start; border-bottom-left-radius: 2px; }
-
-        /* Input Form */
-        .input-area { background: #fff; padding: 15px 20px; border-top: 1px solid #e2e8f0; }
-        .chat-form { display: flex; gap: 10px; align-items: center; }
-        .file-label { background: #e2e8f0; padding: 10px 14px; border-radius: 6px; cursor: pointer; font-size: 18px; }
-        .file-label:hover { background: #cbd5e1; }
-        input[type="file"] { display: none; }
-        textarea { flex: 1; height: 45px; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; resize: none; font-size: 14px; outline: none; }
-        textarea:focus { border-color: #0284c7; }
-        .send-btn { background: #16a34a; color: white; border: none; padding: 0 20px; height: 45px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 15px; }
-        .send-btn:hover { background: #15803d; }
-        .preview { font-size: 12px; color: #64748b; margin-top: 5px; }
+        .message { max-width: 70%; padding: 12px 16px; border-radius: 8px; line-height: 1.5; white-space: pre-wrap; }
+        .user-message { background: #4e73df; color: white; align-self: flex-end; }
+        .bot-message { background: white; color: #333; align-self: flex-start; border: 1px solid #e3e6f0; }
+        .input-area { background: white; padding: 15px 20px; border-top: 1px solid #ddd; display: flex; gap: 10px; align-items: center; }
+        .input-area input[type="text"] { flex: 1; padding: 12px; border: 1px solid #ccc; border-radius: 5px; outline: none; }
+        .input-area input[type="file"] { display: none; }
+        .file-label { background: #eaecf4; padding: 10px; border-radius: 5px; cursor: pointer; }
+        .send-btn { background: #1cc88a; color: white; border: none; padding: 12px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        .send-btn:disabled { background: #858796; }
     </style>
 </head>
 <body>
 
     <div class="sidebar">
         <h2>Ji Web Assistant</h2>
-        <button class="new-chat-btn" onclick="startNewChat()">+ New Chat</button>
-        <div class="history-list" id="historyList"></div>
+        <button class="new-chat-btn" onclick="location.reload()">+ New Chat</button>
     </div>
 
-    <div class="main-chat">
+    <div class="main-content">
         <div class="chat-header">Ji Web Assistant Chat</div>
         <div class="chat-box" id="chatBox">
             <div class="message bot-message">வணக்கம்! நான் உங்களுக்கு எப்படி உதவட்டும்?</div>
         </div>
-        <div class="input-area">
-            <form id="chatForm" class="chat-form">
-                <label for="imageInput" class="file-label" title="Upload Photo">📷</label>
-                <input type="file" id="imageInput" name="image" accept="image/*">
-                <textarea id="promptInput" name="prompt" placeholder="Ask your question here..."></textarea>
-                <button type="submit" class="send-btn" id="sendBtn">Send</button>
-            </form>
-            <div class="preview" id="filePreview"></div>
-        </div>
+        
+        <form class="input-area" id="chatForm">
+            <label class="file-label" for="imageInput">📷</label>
+            <input type="file" id="imageInput" accept="image/*">
+            <input type="text" id="promptInput" placeholder="Ask your question here..." autocomplete="off">
+            <button type="submit" class="send-btn" id="sendBtn">Send</button>
+        </form>
     </div>
 
     <script>
-        const chatForm = document.getElementById('chatForm');
-        const promptInput = document.getElementById('promptInput');
-        const imageInput = document.getElementById('imageInput');
-        const chatBox = document.getElementById('chatBox');
-        const historyList = document.getElementById('historyList');
-        const filePreview = document.getElementById('filePreview');
-
-        let chatHistory = [];
-
-        imageInput.addEventListener('change', () => {
-            if (imageInput.files.length > 0) {
-                filePreview.textContent = "Selected: " + imageInput.files[0].name;
-            } else {
-                filePreview.textContent = "";
+        document.getElementById("chatForm").addEventListener("submit", async function(event) {
+            event.preventDefault();
+            
+            var promptInput = document.getElementById("promptInput");
+            var imageInput = document.getElementById("imageInput");
+            var chatBox = document.getElementById("chatBox");
+            var sendBtn = document.getElementById("sendBtn");
+            
+            var prompt = promptInput.value.trim();
+            var imageFile = imageInput.files[0];
+            
+            if (!prompt && !imageFile) return;
+            
+            var userText = prompt;
+            if (imageFile) {
+                userText = userText + " 🖼️ [" + imageFile.name + "]";
             }
-        });
-
-        chatForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const prompt = promptInput.value.trim();
-            const hasImage = imageInput.files.length > 0;
-
-            if (!prompt && !hasImage) return;
-
-            // Display User Message
-            let userText = prompt;
-            if (hasImage) userText += ` [Photo Attached]`;
-            appendMessage(userText, 'user-message');
-
-            // Save to Recent Chats Sidebar
-            if (prompt) {
-                chatHistory.unshift(prompt);
-                updateSidebar();
+            
+            appendMessage(userText, "user-message");
+            promptInput.value = "";
+            imageInput.value = "";
+            sendBtn.disabled = true;
+            
+            var botMsgDiv = appendMessage("சிந்தித்துக் கொண்டிருக்கிறேன்...", "bot-message");
+            
+            var formData = new FormData();
+            formData.append("prompt", prompt);
+            if (imageFile) {
+                formData.append("image", imageFile);
             }
-
-            // Clear inputs
-            promptInput.value = '';
-            filePreview.textContent = '';
-
-            // Send via FormData
-            const formData = new FormData(chatForm);
-
+            
             try {
-                const response = await fetch('/chat', {
-                    method: 'POST',
+                var response = await fetch("/chat", {
+                    method: "POST",
                     body: formData
                 });
-                const data = await response.json();
-
-                if (data.error) {
-                    appendMessage("Error: " + data.error, 'bot-message');
-                } else {
-                    appendMessage(data.response, 'bot-message');
-                }
-            } catch (err) {
-                appendMessage("Error connecting to server.", 'bot-message');
+                var data = await response.json();
+                botMsgDiv.textContent = data.response;
+            } catch (error) {
+                botMsgDiv.textContent = "பிழை ஏற்பட்டது! மீண்டும் முயற்சிக்கவும்.";
+            } finally {
+                sendBtn.disabled = false;
+                chatBox.scrollTop = chatBox.scrollHeight;
             }
-
-            imageInput.value = '';
         });
 
         function appendMessage(text, className) {
-            const div = document.createElement('div');
-            div.className = message ${className};
-            div.innerText = text;
-            chatBox.appendChild(div);
+            var chatBox = document.getElementById("chatBox");
+            var msgDiv = document.createElement("div");
+            msgDiv.className = "message " + className;
+            msgDiv.textContent = text;
+            chatBox.appendChild(msgDiv);
             chatBox.scrollTop = chatBox.scrollHeight;
-        }
-
-        function updateSidebar() {
-            historyList.innerHTML = '';
-            chatHistory.slice(0, 10).forEach(item => {
-                const div = document.createElement('div');
-                div.className = 'history-item';
-                div.innerText = item;
-                historyList.appendChild(div);
-            });
-        }
-
-        function startNewChat() {
-            chatBox.innerHTML = '<div class="message bot-message">வணக்கம்! புது சாட் தொடங்கியது. என்ன கேட்க விரும்புகிறீர்கள்?</div>';
+            return msgDiv;
         }
     </script>
 </body>
